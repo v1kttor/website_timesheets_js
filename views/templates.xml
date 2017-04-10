@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <odoo>
+  <template id="assets_frontend" name="website timesheets daterangepicker" inherit_id="website.assets_frontend">
+    <xpath expr="." position="inside">
+      <!-- Include Required Prerequisites -->
+      <!-- <script type="text/javascript" src="/website_timesheets_js/static/src/js/jquery.js"></script> -->
+      <script type="text/javascript" src="/website_timesheets_js/static/src/js/moment.js"></script>
+      <link rel="stylesheet" type="text/css" href="/website_timesheets_js/static/src/css/bootstrap.css" />
+
+      <!-- Include Date Range Picker -->
+      <script type="text/javascript" src="/website_timesheets_js/static/src/js/daterangepicker.js"></script>
+      <link rel="stylesheet" type="text/css" href="/website_timesheets_js/static/src/css/daterangepicker.css" />
+    </xpath>
+  </template>
+
     <!-- Timesheets button in My Account -->
     <template id="portal_my_home_menu_timesheets"
               name="Portal layout: Timesheets menu entry"
               inherit_id="website_portal.portal_layout"
               priority="28">
         <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <li t-att-class="page_name == 'my_timesheets' and 'active' or ''">
-              <a href="/my/my_timesheets/">Timesheets</a>
+            <li t-att-class="page_name == 'my_timesheets_date' and 'active' or ''">
+              <a href="/my/my_timesheets_date/">Timesheets</a>
             </li>
         </xpath>
     </template>
+
 
     <!-- My Account / Timesheets / Your Timesheets -->
     <template id="portal_my_home_timesheets"
@@ -20,7 +33,7 @@
               priority="28">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
             <h3 class="page-header">
-              <a href="/my/my_timesheets/">Your Timesheets
+              <a href="/my/my_timesheets_date/">Your Timesheets J
                 <small class="ml8">
                   <t t-if="timesheet_count">
                     <span class='badge'>
@@ -37,28 +50,13 @@
     </template>
 
     <!-- My Timesheets -->
-    <template id="portal_my_timesheets" name="My Timesheets">
+    <template id="portal_my_timesheets_date" name="My Timesheets">
       <t t-call="website.layout">
         <!-- <t t-call="website_portal.portal_layout"> buvo pries perziura-->
-        <h3 class="page-header">Your Timesheets <a class="pull-right mr8" t-att-href="'/my/home/'">My Account</a></h3>
+        <h3 class="page-header">Your Timesheets<a class="pull-right mr8" t-att-href="'/my/home/'">My Account</a></h3>
         <div class="pull-right mr8">
-          <strong style="width:150px; margin-right:2cm;">Total : <t t-esc="total_duration"/> </strong>
+          <strong style="width:150px; margin-right:2cm;">Total:<t t-esc="total_duration"/></strong>
         </div>
-          <!-- Sorting -->
-          <!-- <div class="dropdown pull-right mr8">
-            <button id="sortby" class="btn btn-default" type="button" data-toggle="dropdown" style="margin-right:2cm;">
-              <span class="fa fa-sort fa-lg" />
-              <span t-esc="sortings.get(sortby, {}).get('label', 'Newest')"/>
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="sortby">
-              <li t-foreach="sortings" t-as="opt" t-attf-class="#{sortby == opt and 'active'}">
-                <a t-att-href="default_url + '?' + keep_query('sortby')">
-                  <span t-esc="sortings.get(opt).get('label')"/>
-                </a>
-              </li>
-            </ul>
-          </div> -->
           <!-- filter -->
           <div class="dropdown pull-left mr8">
               <button id="week_filters" class="btn btn-default" type="button" data-toggle="dropdown" style="width:150px; margin-left:3cm;">
@@ -67,11 +65,45 @@
               </button>
               <ul class="dropdown-menu" aria-labelledby="week_filters">
                   <li t-foreach="week_filters" t-as="option" t-att-class="week == option and 'active'">
-                      <a t-attf-href="/my/my_timesheets?{{ keep_query('sortby', week=option) }}">
+                      <a t-attf-href="/my/my_timesheets_date/?{{ keep_query('sortby', week=option) }}">
                         <span t-esc="week_filters.get(option).get('label')"/></a>
                   </li>
               </ul>
           </div>
+
+          <!-- daterangepicker -->
+          <div id="reportrange" class="pull-left mr8" style="background: #fff; cursor: pointer; width: 30%">
+            <i><strong>Date</strong></i>
+            <span></span> <b class="caret"></b>
+          </div>
+
+          <script type="text/javascript">
+          $(function()  {
+
+              var start = moment().subtract(29, 'days');
+              var end = moment();
+
+              function cb(start, end) {
+                  $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+              }
+
+              $('#reportrange').daterangepicker({
+                  startDate: start,
+                  endDate: end,
+                  ranges: {
+                     'Today': [moment(), moment()],
+                     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                     'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                     'This Month': [moment().startOf('month'), moment().endOf('month')],
+                     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                  }
+              }, cb);
+
+              cb(start, end);
+
+          });
+          </script>
 
         <t t-if="not lines">
           <p>There are currently no timesheets for your account.</p>

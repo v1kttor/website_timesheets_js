@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "website_timesheets_js",
-    'summary': 'website_timesheets_js',
-    'description': 'website_timesheets_js',
+    'name': "website_timesheets_date",
+    'summary': 'website_timesheets_date',
+    'description': 'website_timesheets_date',
     'author': "Viktoras",
     'website': "http://www.yourcompany.com",
     'category': 'Uncategorized',
