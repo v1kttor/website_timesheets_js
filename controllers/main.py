@@ -117,3 +117,16 @@ class website_account(website_account):
 
         return request.render(
             "website_timesheets_js.portal_my_timesheets_date", values)
+
+    # def _datepicker(self):
+    #     values = self._prepare_portal_layout_values()
+    #     partner = request.env.user.partner_id
+    #     aal = request.env['account.analytic.line']
+    #
+    #     values.update({
+    #         'page_name': 'my_timesheets_date',
+    #         'default_url': '/my_timesheets_date/',
+    #         'aal': aal,
+    #     })
+    #     return request.render(
+    #         "website_timesheets_js._datepicker", values)
