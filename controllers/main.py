@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 from collections import OrderedDict
 
 from datetime import date, datetime, timedelta
@@ -51,52 +52,27 @@ class website_account(website_account):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
         aal = request.env['account.analytic.line']
+        path = http.request.httprequest.full_path
+        path = str(path)
+        if path[30:40] and path[46:56]:
+            first_date = path[30:40]
+            last_date = path[46:56]
 
-        all_weeks = datetime.now().isocalendar()[1]
-        domain = [('partner_id.id', '=', partner.id)]
+            domain = [
+                ('partner_id.id', '=', partner.id),
+                ('date', '>=', first_date),
+                ('date', '<=', last_date)]
+        else:
+            domain = [('partner_id.id', '=', partner.id)]
+
         timesheet_count = int(aal.search_count(domain))
-        today = date.today()
-        year = today.year
 
         pager = request.website.pager(
             url="/my/my_timesheets_date/",
-            url_args={'week': week},
             total=timesheet_count,
             page=page,
             step=self._items_per_page,
         )
-        week_filters = OrderedDict({
-            'all': {'label': _('All'), 'domain': []},
-        })
-
-        ls = []
-        for i in range(all_weeks, 0, -1):
-            ls.append(i)
-
-        for week_number in ls:
-                week_filters.update({str(week_number): {
-                    'label': week_number, 'domain': []
-                }})
-        if week:
-            if str(week) is ('all'):
-                for week_number in ls:
-                    week_filters.update({str(week_number): {
-                        'label': week_number, 'domain': []
-                    }})
-            else:
-                if week != ('all'):
-                    year_week = _week_and_year(str(week), year)
-                    dt = _full_date(year_week)
-                    begining_of_the_week = dt - timedelta(days=6)
-                    end_of_the_week = begining_of_the_week + timedelta(days=6)
-
-                    for week_number in ls:
-                        week_filters.update({str(week_number): {
-                            'label': week_number, 'domain': [
-                                ('date',  '>=', str(begining_of_the_week)),
-                                ('date', '<=', str(end_of_the_week))]
-                        }})
-        domain += week_filters.get(week, week_filters['all'])['domain']
 
         lines = aal.search(
             domain, limit=self._items_per_page,
@@ -105,28 +81,11 @@ class website_account(website_account):
         values.update({
             'lines': lines,
             'pager': pager,
-            'week_filters': week_filters,
-            'sortby': sortby,
-            'week': week,
             'page_name': 'my_timesheets_date',
             'default_url': '/my_timesheets_date/',
-            'ls': ls,
             'aal': aal,
             'total_duration': sum(lines.mapped('unit_amount'))
         })
 
         return request.render(
             "website_timesheets_js.portal_my_timesheets_date", values)
-
-    # def _datepicker(self):
-    #     values = self._prepare_portal_layout_values()
-    #     partner = request.env.user.partner_id
-    #     aal = request.env['account.analytic.line']
-    #
-    #     values.update({
-    #         'page_name': 'my_timesheets_date',
-    #         'default_url': '/my_timesheets_date/',
-    #         'aal': aal,
-    #     })
-    #     return request.render(
-    #         "website_timesheets_js._datepicker", values)

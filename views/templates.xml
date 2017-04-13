@@ -56,32 +56,31 @@
         <div class="pull-right mr8">
           <strong style="width:150px; margin-right:2cm;">Total:<t t-esc="total_duration"/></strong>
         </div>
-            <!-- week filter -->
-          <!-- <div class="dropdown pull-left mr8">
-              <button id="week_filters" class="btn btn-default" type="button" data-toggle="dropdown" style="width:150px; margin-left:3cm;">
-                  Week: <span t-esc="week_filters.get(week, {}).get('label', 'All')"/>
-                  <span class="caret"></span>
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="week_filters">
-                  <li t-foreach="week_filters" t-as="option" t-att-class="week == option and 'active'">
-                      <a t-attf-href="/my/my_timesheets_date/?{{ keep_query('sortby', week=option) }}">
-                        <span t-esc="week_filters.get(option).get('label')"/></a>
-                  </li>
-              </ul>
-          </div> -->
 
           <!-- daterangepicker -->
           <div id="reportrange" class="pull-left mr8" style="background: #fff; cursor: pointer; margin-left:3cm; padding: 5px 10px; width:20%;">
             <i class="fa fa-calendar" aria-hidden="true"></i>
             <span></span> <b class="caret"></b>
-            <input type="text" name="daterange" id="reportrange"/>
+            <input type="text" name="daterange" id="reportrange" class="repot"/>
           </div>
           <!-- // window.location.href = "/my/my_timesheets_date/?first=" + first + and + last; -->
+          <!-- viskas normaliai tik reikia patvarkyti,kad kur pasirenki liktu data kaip ir url -->
           <script type="text/javascript">
-          $(function dates() {
+          $(function () {
 
               var start = moment().subtract(29, 'days');
               var end = moment();
+
+              function cb(start, end) {
+                    var first = start.format('YYYY-MM-DD');
+                    var last = end.format('YYYY-MM-DD');
+                    var and = "?last="
+                    $( "#reportrange" ).change(function() {
+                    var mylink ="/my/my_timesheets_date/?first=" + first + and + last;
+                    var link = document.location.href = mylink;
+                    console.log(first, last);
+                    });
+              }
 
               $('input[id="reportrange"]').daterangepicker({
                   startDate: start,
@@ -97,23 +96,8 @@
               }, cb);
               cb(start, end);
 
-              function cb(start, end) {
-                    var and = "and_last=";
-                    var first = start.format('YYYY-MM-DD');
-                    var last = end.format('YYYY-MM-DD');
-                    $( "#reportrange" ).change(function() {
-                    var mylink ="/my/my_timesheets_date/?first=" + first + "?last=" + last;
-                    var link = document.location.href = mylink;
-                    console.log(first, last);
-                    });
-              }
-
           });
           </script>
-          <!-- $('.results').html(first + '  ' + last); -->
-          <!-- <div class="results">
-          <strong></strong>
-      </div> -->
         <t t-if="not lines">
           <p>There are currently no timesheets for your account.</p>
         </t>
