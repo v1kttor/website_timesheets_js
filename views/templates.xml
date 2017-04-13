@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <odoo>
   <template id="assets_frontend" name="website timesheets daterangepicker" inherit_id="website.assets_frontend">
     <xpath expr="." position="inside">
       <!-- Include Required Prerequisites -->
+      <!-- <script type="text/javascript" src="/website_timesheets_js/static/src/js/jquery.js"></script> -->
       <script type="text/javascript" src="/website_timesheets_js/static/src/js/moment.js"></script>
       <link rel="stylesheet" type="text/css" href="/website_timesheets_js/static/src/css/bootstrap.css" />
 
@@ -23,7 +25,6 @@
             </li>
         </xpath>
     </template>
-
 
     <!-- My Account / Timesheets / Your Timesheets -->
     <template id="portal_my_home_timesheets"
@@ -61,10 +62,21 @@
           <div id="reportrange" class="pull-left mr8" style="background: #fff; cursor: pointer; margin-left:3cm; padding: 5px 10px; width:20%;">
             <i class="fa fa-calendar" aria-hidden="true"></i>
             <span></span> <b class="caret"></b>
-            <input type="text" name="daterange" id="reportrange" class="repot"/>
+            <input type="text" name="daterange" id="reportrange"/>
           </div>
-          <!-- // window.location.href = "/my/my_timesheets_date/?first=" + first + and + last; -->
+        <!-- $('input[id="reportrange"]').daterangepicker({ -->
           <!-- viskas normaliai tik reikia patvarkyti,kad kur pasirenki liktu data kaip ir url -->
+
+                        <!-- function cb(start, end) {
+                              $("#reportrange").change(function() {
+                              var first = start.format('YYYY-MM-DD');
+                              var last = end.format('YYYY-MM-DD');
+                              var and = "?last="
+                              window.location = "/my/my_timesheets_date/?first=" + first + and + last;
+                              });
+                        } -->
+
+          <!-- $('#reportrange input').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY')) -->
           <script type="text/javascript">
           $(function () {
 
@@ -72,17 +84,16 @@
               var end = moment();
 
               function cb(start, end) {
-                    var first = start.format('YYYY-MM-DD');
-                    var last = end.format('YYYY-MM-DD');
-                    var and = "?last="
-                    $( "#reportrange" ).change(function() {
-                    var mylink ="/my/my_timesheets_date/?first=" + first + and + last;
-                    var link = document.location.href = mylink;
-                    console.log(first, last);
-                    });
-              }
+                $("#reportrange").change(function() {
+                var first = start.format('YYYY-MM-DD');
+                var last = end.format('YYYY-MM-DD');
+                var and = "?last="
+                window.location = "/my/my_timesheets_date/?first=" + first + and + last;
+                });
 
-              $('input[id="reportrange"]').daterangepicker({
+                ;}
+
+               $('#reportrange input').daterangepicker({
                   startDate: start,
                   endDate: end,
                   ranges: {
@@ -94,10 +105,12 @@
                      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                   }
               }, cb);
+
               cb(start, end);
 
           });
           </script>
+          <div id="datos"></div>
         <t t-if="not lines">
           <p>There are currently no timesheets for your account.</p>
         </t>
