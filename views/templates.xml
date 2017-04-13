@@ -71,21 +71,19 @@
           </div> -->
 
           <!-- daterangepicker -->
-          <div id="reportrange" class="pull-left mr8" style="background: #fff; cursor: pointer; width: 30%; margin-left:3cm;">
-            <i><strong>Date</strong></i>
+          <div id="reportrange" class="pull-left mr8" style="background: #fff; cursor: pointer; margin-left:3cm; padding: 5px 10px; width:20%;">
+            <i class="fa fa-calendar" aria-hidden="true"></i>
             <span></span> <b class="caret"></b>
+            <input type="text" name="daterange" id="reportrange"/>
           </div>
-
+          <!-- // window.location.href = "/my/my_timesheets_date/?first=" + first + and + last; -->
           <script type="text/javascript">
-          $(function()  {
+          $(function dates() {
 
               var start = moment().subtract(29, 'days');
               var end = moment();
 
-              function cb(start, end) {
-                  $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-              }
-              $('#reportrange').daterangepicker({
+              $('input[id="reportrange"]').daterangepicker({
                   startDate: start,
                   endDate: end,
                   ranges: {
@@ -97,14 +95,25 @@
                      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                   }
               }, cb);
-
               cb(start, end);
-              <!-- var datea = html(start.format('MMMM D, YYYY'); -->
-              <!-- console.log(datea); -->
+
+              function cb(start, end) {
+                    var and = "and_last=";
+                    var first = start.format('YYYY-MM-DD');
+                    var last = end.format('YYYY-MM-DD');
+                    $( "#reportrange" ).change(function() {
+                    var mylink ="/my/my_timesheets_date/?first=" + first + "?last=" + last;
+                    var link = document.location.href = mylink;
+                    console.log(first, last);
+                    });
+              }
 
           });
           </script>
-
+          <!-- $('.results').html(first + '  ' + last); -->
+          <!-- <div class="results">
+          <strong></strong>
+      </div> -->
         <t t-if="not lines">
           <p>There are currently no timesheets for your account.</p>
         </t>
