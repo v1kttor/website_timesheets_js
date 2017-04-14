@@ -1,5 +1,10 @@
-
-
+/**
+* @version: 2.1.25
+* @author: Dan Grossman http://www.dangrossman.info/
+* @copyright: Copyright (c) 2012-2017 Dan Grossman. All rights reserved.
+* @license: Licensed under the MIT license. See http://www.opensource.org/licenses/mit-license.php
+* @website: https://www.daterangepicker.com/
+*/
 // Follow the UMD template https://github.com/umdjs/umd/blob/master/templates/returnExportsGlobal.js
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {
@@ -92,7 +97,7 @@
                 '<div class="calendar left">' +
                     '<div class="daterangepicker_input">' +
                       '<input class="input-mini form-control" type="text" name="daterangepicker_start" value="" />' +
-                      '<i class="fa fa-calendar glyphicon glyphicon-calendar"></i>' +
+                      '<i class="fa fa-calendar"></i>' +
                       '<div class="calendar-time">' +
                         '<div></div>' +
                         '<i class="fa fa-clock-o glyphicon glyphicon-time"></i>' +
@@ -103,7 +108,7 @@
                 '<div class="calendar right">' +
                     '<div class="daterangepicker_input">' +
                       '<input class="input-mini form-control" type="text" name="daterangepicker_end" value="" />' +
-                      '<i class="fa fa-calendar glyphicon glyphicon-calendar"></i>' +
+                      '<i class="fa fa-calendar"></i>' +
                       '<div class="calendar-time">' +
                         '<div></div>' +
                         '<i class="fa fa-clock-o glyphicon glyphicon-time"></i>' +
@@ -113,29 +118,11 @@
                 '</div>' +
                 '<div class="ranges">' +
                     '<div class="range_inputs">' +
-                        '<button id="urlbtn" class="applyBtn" disabled="disabled" type="button"></button> ' +
-                        '<button class="cancelBtn" type="button" special="cancel"></button>' +
-                    '<script>' +
-                    '$( "#urlbtn" ).click(function date_url() {' +
-                    'var end = "&end=" ;' +
-                    'var firstdate = this.startDate;' +
-                    'var lastdate = this.endDate;' +
-                    // 'console.log(startDate, end);' +
-                    'window.location.href = "/my//my_timesheets_date/?start=" + firstdate + end + lastdate ;' +
-                    '});' +
-                    '</script>' +
-                    // '<script>' +
-                    // '$( "#urlbtn" ).click(function date_url(frstDate, scndDate) {' +
-                    // // 'var labas = "labas" ;' +
-                    // 'var end = "&end=" ;' +
-                    // // 'alert( "labas" );' +
-                    // 'window.location.href = "/my//my_timesheets_date/?start=" + frstDate + end + scndDate ;' +
-                    // '});' +
-                    // '</script>' +
+                        '<button class="applyBtn" disabled="disabled" type="button"></button> ' +
+                        '<button class="cancelBtn" type="button"></button>' +
                     '</div>' +
                 '</div>' +
             '</div>';
-
 
         this.parentEl = (options.parentEl && $(options.parentEl).length) ? $(options.parentEl) : $(this.parentEl);
         this.container = $(options.template).appendTo(this.parentEl);
