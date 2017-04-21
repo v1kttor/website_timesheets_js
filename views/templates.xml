@@ -33,7 +33,7 @@
               priority="28">
         <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
             <h3 class="page-header">
-              <a href="/my/my_timesheets_date/">Your Timesheets J
+              <a href="/my/my_timesheets_date/">Your Timesheets (with datepicker)
                 <small class="ml8">
                   <t t-if="timesheet_count">
                     <span class='badge'>
@@ -52,50 +52,42 @@
     <!-- My Timesheets -->
     <template id="portal_my_timesheets_date" name="My Timesheets">
       <t t-call="website.layout">
-        <!-- <t t-call="website_portal.portal_layout"> buvo pries perziura-->
-        <h3 class="page-header">Your Timesheets<a class="pull-right mr8" t-att-href="'/my/home/'">My Account</a></h3>
-        <div class="pull-right mr8">
-          <strong style="width:150px; margin-right:2cm;">Total:<t t-esc="total_duration"/></strong>
-        </div>
+        <!-- <t t-call="website_portal.portal_layout"> -->
+        <h3 class="page-header">Your Timesheets<a class="pull-right mr8" t-att-href="'/my/home/'">My Account</a>
+        </h3>
 
           <!-- daterangepicker -->
           <div id="reportrange" class="pull-left mr8" style="background: #fff; cursor: pointer; margin-left:3cm; padding: 5px 10px; width:20%;">
             <i class="fa fa-calendar" aria-hidden="true"></i>
-            <span></span> <b class="caret"></b>
+            <span></span>
+            <b class="caret"></b>
             <input type="text" name="daterange" id="reportrange"/>
           </div>
-        <!-- $('input[id="reportrange"]').daterangepicker({ -->
-          <!-- viskas normaliai tik reikia patvarkyti,kad kur pasirenki liktu data kaip ir url -->
-
-                        <!-- function cb(start, end) {
-                              $("#reportrange").change(function() {
-                              var first = start.format('YYYY-MM-DD');
-                              var last = end.format('YYYY-MM-DD');
-                              var and = "?last="
-                              window.location = "/my/my_timesheets_date/?first=" + first + and + last;
-                              });
-                        } -->
-
-          <!-- $('#reportrange input').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY')) -->
           <script type="text/javascript">
-          $(function () {
+          $(function ()
+          {
 
-              var start = moment().subtract(29, 'days');
-              var end = moment();
+            var start = moment().subtract(29, 'days');
+            var end = moment();
 
-              function cb(start, end) {
-                $("#reportrange").change(function() {
-                var first = start.format('YYYY-MM-DD');
-                var last = end.format('YYYY-MM-DD');
-                var and = "?last="
-                window.location = "/my/my_timesheets_date/?first=" + first + and + last;
-                });
+            function cb(start, end)
+            {
+            $('#reportrange').on('change', 'input', function()
+            {
+            var first = start.format('YYYY-MM-DD');
+            var last = end.format('YYYY-MM-DD');
+            dates_to_url(first, last);
+            });
+            }
 
-                ;}
-
+            function dates_to_url(first, last)
+            {
+            window.location = "/my/my_timesheets_date/?range=" + first + "?" + last;
+            }
                $('#reportrange input').daterangepicker({
                   startDate: start,
                   endDate: end,
+                  cookie:'yes',
                   ranges: {
                      'Today': [moment(), moment()],
                      'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -105,16 +97,18 @@
                      'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
                   }
               }, cb);
-
               cb(start, end);
 
           });
           </script>
-          <div id="datos"></div>
         <t t-if="not lines">
           <p>There are currently no timesheets for your account.</p>
         </t>
         <t t-if="lines">
+          <div id="lines_range"></div>
+          <div class="pull-right mr8">
+            <strong style="width:20%; margin-right:2cm;"><i class="fa fa-clock-o" aria-hidden="true"></i><i>Total:<t t-esc="total_duration"/></i></strong>
+          </div>
           <table class="table table-hover" style="margin-right:4cm; margin-left:3cm; width:90%;" >  <!--width:85%; -->
             <thead>
               <tr class="active">

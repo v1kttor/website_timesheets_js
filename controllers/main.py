@@ -2,6 +2,7 @@
 
 from odoo import http
 from odoo.http import request
+import urlparse
 
 from odoo.addons.website_portal.controllers.main import website_account
 
@@ -29,21 +30,17 @@ class website_account(website_account):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
         aal = request.env['account.analytic.line']
+        domain = [('partner_id.id', '=', partner.id)]
 
         path = request.httprequest.full_path
-        path = str(path)
-        # import pdb; pdb.set_trace()
-
-        if path[30:40] and path[46:56]:
-            first_date = path[30:40]
-            last_date = path[46:56]
-
-            domain = [
-                ('partner_id.id', '=', partner.id),
+        parsed = urlparse.urlparse(str(path)).query
+        if parsed:
+            dates = parsed.split("=")[1]
+            first_date = dates.split("?")[0]
+            last_date = dates.split("?")[1]
+            domain += [
                 ('date', '>=', first_date),
                 ('date', '<=', last_date)]
-        else:
-            domain = [('partner_id.id', '=', partner.id)]
 
         timesheet_count = int(aal.search_count(domain))
         pager = request.website.pager(
