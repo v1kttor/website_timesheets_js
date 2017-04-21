@@ -11,6 +11,7 @@
       <!-- Include Date Range Picker -->
       <script type="text/javascript" src="/website_timesheets_js/static/src/js/daterangepicker.js"></script>
       <link rel="stylesheet" type="text/css" href="/website_timesheets_js/static/src/css/daterangepicker.css" />
+      <script type="text/javascript" src="/website_timesheets_js/static/src/js/daterange.js"></script>
     </xpath>
   </template>
 
@@ -63,44 +64,7 @@
             <b class="caret"></b>
             <input type="text" name="daterange" id="reportrange"/>
           </div>
-          <script type="text/javascript">
-          $(function ()
-          {
-
-            var start = moment().subtract(29, 'days');
-            var end = moment();
-
-            function cb(start, end)
-            {
-            $('#reportrange').on('change', 'input', function()
-            {
-            var first = start.format('YYYY-MM-DD');
-            var last = end.format('YYYY-MM-DD');
-            dates_to_url(first, last);
-            });
-            }
-
-            function dates_to_url(first, last)
-            {
-            window.location = "/my/my_timesheets_date/?range=" + first + "?" + last;
-            }
-               $('#reportrange input').daterangepicker({
-                  startDate: start,
-                  endDate: end,
-                  cookie:'yes',
-                  ranges: {
-                     'Today': [moment(), moment()],
-                     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                     'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                     'This Month': [moment().startOf('month'), moment().endOf('month')],
-                     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-                  }
-              }, cb);
-              cb(start, end);
-
-          });
-          </script>
+          <script type="text/javascript"></script>
         <t t-if="not lines">
           <p>There are currently no timesheets for your account.</p>
         </t>

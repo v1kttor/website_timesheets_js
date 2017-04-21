@@ -2,8 +2,6 @@
 
 from odoo import http
 from odoo.http import request
-import urlparse
-
 from odoo.addons.website_portal.controllers.main import website_account
 
 items_per_page = 20
@@ -29,20 +27,18 @@ class website_account(website_account):
     def portal_my_timesheets_date(self, page=1, sortby=None, week=None, **kw):
         values = self._prepare_portal_layout_values()
         partner = request.env.user.partner_id
-        aal = request.env['account.analytic.line']
+        AnalyticLine = request.env['account.analytic.line']
         domain = [('partner_id.id', '=', partner.id)]
+        url_args = request.httprequest.args
 
-        path = request.httprequest.full_path
-        parsed = urlparse.urlparse(str(path)).query
-        if parsed:
-            dates = parsed.split("=")[1]
-            first_date = dates.split("?")[0]
-            last_date = dates.split("?")[1]
+        if url_args:
+            start = url_args['start']
+            end = url_args['end']
             domain += [
-                ('date', '>=', first_date),
-                ('date', '<=', last_date)]
+                ('date', '>=', str(start)),
+                ('date', '<=', str(end))]
 
-        timesheet_count = int(aal.search_count(domain))
+        timesheet_count = int(AnalyticLine.search_count(domain))
         pager = request.website.pager(
             url="/my/my_timesheets_date/",
             total=timesheet_count,
@@ -50,7 +46,7 @@ class website_account(website_account):
             step=self._items_per_page,
         )
 
-        lines = aal.search(
+        lines = AnalyticLine.search(
             domain, limit=self._items_per_page,
             offset=pager['offset']
         )
@@ -59,7 +55,7 @@ class website_account(website_account):
             'pager': pager,
             'page_name': 'my_timesheets_date',
             'default_url': '/my_timesheets_date/',
-            'aal': aal,
+            'AnalyticLine': AnalyticLine,
             'total_duration': sum(lines.mapped('unit_amount'))
         })
 
