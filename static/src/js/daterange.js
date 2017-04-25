@@ -14,22 +14,6 @@ $(function ()
     });
     }
 
-    // if (location.pathname == '/my/my_timesheets_date/') {
-    //   var start = moment().subtract(29, 'days');
-    //   var end = moment();
-    // }
-    // else {
-    //   function getURLParameter(name) {
-    //   return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
-    //   }
-    //   start_date = getURLParameter('start');
-    //   end_date = getURLParameter('end');
-    //   var start = moment(start_date);
-    //   var end = moment(end_date);
-    //
-    // }
-
-
     if (location.pathname != '/my/my_timesheets_date/') {
       function getURLParameter(name) {
       return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
@@ -39,7 +23,6 @@ $(function ()
       var start = moment(start_date);
       var end = moment(end_date);
     }
-
 
     function dates_to_url(first, last)
     {
