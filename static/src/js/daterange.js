@@ -14,20 +14,21 @@ $(function ()
     });
     }
 
-    if (location.pathname != '/my/my_timesheets_date/') {
       function getURLParameter(name) {
       return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
       }
       start_date = getURLParameter('start');
       end_date = getURLParameter('end');
-      var start = moment(start_date);
-      var end = moment(end_date);
-    }
 
-    function dates_to_url(first, last)
-    {
-    window.location = "/my/my_timesheets_date/?start=" + first + "&end=" + last;
-    }
+        if(start_date && end_date) {
+        var start = moment(start_date);
+        var end = moment(end_date);
+        }
+
+      function dates_to_url(first, last)
+      {
+      window.location = "/my/my_timesheets_date/?start=" + first + "&end=" + last;
+      }
 
      $('#reportrange input').daterangepicker({
         startDate: start,
