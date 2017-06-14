@@ -1,121 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <odoo>
-  <template id="assets_frontend" name="website timesheets daterangepicker" inherit_id="website.assets_frontend">
+
+<template id="assets_frontend" name="website timesheets daterangepicker" inherit_id="website.assets_frontend">
     <xpath expr="." position="inside">
-      <!-- Include Required Prerequisites -->
-      <!-- <script type="text/javascript" src="/website_timesheets_js/static/src/js/jquery.js"></script> -->
-      <script type="text/javascript" src="/website_timesheets_js/static/src/js/moment.js"></script>
-      <link rel="stylesheet" type="text/css" href="/website_timesheets_js/static/src/css/bootstrap.css" />
+        <script type="text/javascript" src="/website_timesheets_js/static/src/js/moment.js"></script>
+        <link rel="stylesheet" type="text/css" href="/website_timesheets_js/static/src/css/bootstrap.css"/>
 
-      <!-- Include Date Range Picker -->
-      <script type="text/javascript" src="/website_timesheets_js/static/src/js/daterangepicker.js"></script>
-      <link rel="stylesheet" type="text/css" href="/website_timesheets_js/static/src/css/daterangepicker.css" />
-      <script type="text/javascript" src="/website_timesheets_js/static/src/js/daterange.js"></script>
+        <script type="text/javascript" src="/website_timesheets_js/static/src/js/daterangepicker.js"></script>
+        <link rel="stylesheet" type="text/css" href="/website_timesheets_js/static/src/css/daterangepicker.css"/>
+        <script type="text/javascript" src="/website_timesheets_js/static/src/js/daterange.js"></script>
     </xpath>
-  </template>
+</template>
 
-    <!-- Timesheets button in My Account -->
-    <template id="portal_my_home_menu_timesheets"
-              name="Portal layout: Timesheets menu entry"
-              inherit_id="website_portal.portal_layout"
-              priority="28">
-        <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
-            <li t-att-class="page_name == 'my_timesheets_date' and 'active' or ''">
-              <a href="/my/my_timesheets_date/">Timesheets</a>
-            </li>
-        </xpath>
-    </template>
+<!-- Timesheets button in My Account -->
+<template id="portal_my_home_menu_timesheets" name="Portal layout: Timesheets menu entry" inherit_id="website_portal.portal_layout" priority="28">
+    <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
+        <li t-att-class="page_name == 'my_timesheets_date' and 'active' or ''">
+            <a href="/my/my_timesheets_date/">Timesheets</a>
+        </li>
+    </xpath>
+</template>
 
-    <!-- My Account / Timesheets / Your Timesheets -->
-    <template id="portal_my_home_timesheets"
-              name="Portal My Home: Timesheets entries"
-              inherit_id="website_portal.portal_my_home"
-              priority="28">
-        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
-            <h3 class="page-header">
-              <a href="/my/my_timesheets_date/">Your Timesheets (with datepicker)
+<!-- My Account / Timesheets / Your Timesheets -->
+<template id="portal_my_home_timesheets" name="Portal My Home: Timesheets entries" inherit_id="website_portal.portal_my_home" priority="28">
+    <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
+        <h3 class="page-header">
+            <a href="/my/my_timesheets_date/">Your Timesheets (with datepicker)
                 <small class="ml8">
-                  <t t-if="timesheet_count">
-                    <span class='badge'>
-                      <t t-esc="timesheet_count"/>
-                    </span>
-                  </t>
-                  <t t-if="not timesheet_count">
-                      There are currently no timesheets for your account.
-                  </t>
-                  </small>
-                </a>
-            </h3>
-        </xpath>
-    </template>
+                    <t t-if="timesheet_count">
+                        <span class='badge'>
+                            <t t-esc="timesheet_count"/>
+                        </span>
+                    </t>
+                    <t t-if="not timesheet_count">
+                        There are currently no timesheets for your account.
+                    </t>
+                </small>
+            </a>
+        </h3>
+    </xpath>
+</template>
 
-    <!-- My Timesheets -->
-    <template id="portal_my_timesheets_date" name="My Timesheets">
-      <t t-call="website.layout">
-        <!-- <t t-call="website_portal.portal_layout"> -->
+<!-- My Timesheets -->
+<template id="portal_my_timesheets_date" name="My Timesheets">
+    <t t-call="website.layout">
         <h3 class="page-header">Your Timesheets<a class="pull-right mr8" t-att-href="'/my/home/'">My Account</a>
         </h3>
 
-          <!-- daterangepicker -->
-          <div id="reportrange" class="pull-left mr8" style="background: #fff; cursor: pointer; margin-left:3cm; padding: 5px 10px; width:20%;">
+        <div id="reportrange" class="pull-left mr8" style="background: #fff; cursor: pointer; margin-left:3cm; padding: 5px 10px; width:20%;">
             <i class="fa fa-calendar" aria-hidden="true"></i>
             <span></span>
             <b class="caret"></b>
             <input type="text" name="daterange" id="reportrange"/>
-          </div>
-          <script type="text/javascript"></script>
+        </div>
+        <script type="text/javascript"></script>
         <t t-if="not lines">
-          <p>There are currently no timesheets for your account.</p>
+            <p>There are currently no timesheets for your account.</p>
         </t>
         <t t-if="lines">
-          <div id="lines_range"></div>
-          <div class="pull-right mr8">
-            <strong style="width:20%; margin-right:2cm;"><i class="fa fa-clock-o" aria-hidden="true"></i><i>Total:<t t-esc="total_duration"/></i></strong>
-          </div>
-          <table class="table table-hover" style="margin-right:4cm; margin-left:3cm; width:90%;" >  <!--width:85%; -->
-            <thead>
-              <tr class="active">
-                <th style="width:120px;">Date</th>
-                <th style="width:220px;">Project</th>
-                <th>Description</th>
-                <th style="width:160px;">Is Invoiced</th>
-                <th style="width:100px;">Duration</th>
-              </tr>
-            </thead>
-            <tbody>
-            <t t-foreach="lines" t-as="line">
-              <tr>
-                <td><span t-field="line.date"/></td>
-                <td><span t-field="line.project_id"/></td>
-                <td><span t-field="line.name"/></td>
-                <td>
-                <t t-if="line.is_invoiced == True">
-                    <span>
-                      <i class="fa fa-fw fa-check"/>
-                      <a t-att-href="'/report/pdf/account.report_invoice/'+str(line.invoice_line_id.invoice_id.id)"
-                         t-att-title="line.invoice_line_id.invoice_id.number"
-                         target="_blank">
-                        <t t-esc="line.invoice_line_id.invoice_id.number"/>
-                      </a>
-                    </span>
-                </t>
-                <t t-if="line.is_invoiced == False">
-                  <span class="label label-default"></span>
-                </t>
-              </td>
-                <td>
-                  <span t-field="line.unit_amount"/>
-                </td>
-              </tr>
-            </t>
-          </tbody>
-          </table>
-          <div t-if="pager" class="o_portal_pager text-center">
-              <t t-call="website.pager"/>
+            <div id="lines_range"></div>
+            <div class="pull-right mr8">
+                <strong style="width:20%; margin-right:2cm;">
+                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                    <i>Total:<t t-esc="total_duration"/></i>
+                </strong>
+            </div>
+            <table class="table table-hover" style="margin-right:4cm; margin-left:3cm; width:90%;">
+                <thead>
+                    <tr class="active">
+                        <th style="width:120px;">Date</th>
+                        <th style="width:220px;">Project</th>
+                        <th>Description</th>
+                        <th style="width:160px;">Is Invoiced</th>
+                        <th style="width:100px;">Duration</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="lines" t-as="line">
+                        <tr>
+                            <td><span t-field="line.date"/></td>
+                            <td><span t-field="line.project_id"/></td>
+                            <td><span t-field="line.name"/></td>
+                            <td>
+                                <t t-if="line.is_invoiced == True">
+                                    <span>
+                                        <i class="fa fa-fw fa-check"/>
+                                        <a t-att-href="'/report/pdf/account.report_invoice/'+str(line.invoice_line_id.invoice_id.id)" t-att-title="line.invoice_line_id.invoice_id.number" target="_blank">
+                                            <t t-esc="line.invoice_line_id.invoice_id.number"/>
+                                        </a>
+                                    </span>
+                                </t>
+                                <t t-if="line.is_invoiced == False">
+                                    <span class="label label-default"></span>
+                                </t>
+                            </td>
+                            <td>
+                                <span t-field="line.unit_amount"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+            <div t-if="pager" class="o_portal_pager text-center">
+                <t t-call="website.pager"/>
             </div>
         </t>
-      </t>
-    </template>
+    </t>
+</template>
 
 </odoo>
